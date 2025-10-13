@@ -10,6 +10,7 @@ import { SiteFooter } from "@/components/site/footer"
 import { UserProvider } from "@/context/user-context"
 import { StoryProvider } from "@/context/story-context"
 import { Suspense } from "react"
+import Providers from "./privyProvider"
 
 export const metadata: Metadata = {
   title: "v0 App",
@@ -25,18 +26,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <UserProvider>
-            <StoryProvider>
-              <Suspense fallback={<div>Loading...</div>}>
-                <SiteHeader />
-                {children}
-                <SiteFooter />
-              </Suspense>
-            </StoryProvider>
-          </UserProvider>
-        </ThemeProvider>
-        <Analytics />
+        <Providers>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <UserProvider>
+              <StoryProvider>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <SiteHeader />
+                  {children}
+                  <SiteFooter />
+                </Suspense>
+              </StoryProvider>
+            </UserProvider>
+          </ThemeProvider>
+          <Analytics />
+        </Providers>
       </body>
     </html>
   )

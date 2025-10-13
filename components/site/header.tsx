@@ -10,12 +10,14 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
+  DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Menu } from "lucide-react"
 import { categories } from "@/data/stories"
 import { SearchInput } from "./search-input"
 import { useUser } from "@/context/user-context"
+import { LogIn, UserPlus, LogOut, Wallet } from 'lucide-react'
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
@@ -117,19 +119,85 @@ function WriteMenu({ inline = false }: { inline?: boolean }) {
 }
 
 function AuthButtons() {
-  const { isConnected, connectWallet } = useUser()
-  if (isConnected) return <Button variant="outline">Connected</Button>
+  // NOTE: Ensure useUser provides all these properties/functions
+  const { isConnected, connectWallet, disconnectWallet, address } = useUser()
+
+  // Helper to format the wallet address for display in the "Connected" state
+  const displayAddress = address ? `${address.substring(0, 6)}...` : 'Wallet';
+
+  const handleWalletAction = () => {
+    if (isConnected && disconnectWallet) {
+      // If connected, attempt to disconnect
+      disconnectWallet();
+    } else {
+      // If not connected, attempt to connect
+      connectWallet();
+    }
+  }
+
+  // The main button that triggers the dropdown
+  const triggerButton = isConnected ? (
+    <Button variant="outline" className="flex items-center gap-2">
+        <Wallet className="w-4 h-4" />
+        {displayAddress}
+    </Button>
+  ) : (
+    <Button className="bg-primary text-primary-foreground">
+        Sign Up
+    </Button>
+  );
+
   return (
-    <div className="flex items-center gap-2">
-      <Link href="/signup">
-        <Button variant="outline">Sign Up</Button>
-      </Link>
-      <Button className="bg-primary text-primary-foreground" onClick={connectWallet}>
-        Connect
-      </Button>
-    </div>
+    <DropdownMenu>
+      {/* 1. Dropdown Trigger: The primary header button */}
+      <DropdownMenuTrigger asChild>
+        {triggerButton}
+      </DropdownMenuTrigger>
+      
+      {/* 2. Dropdown Content: The menu with options */}
+      <DropdownMenuContent className="w-56" align="end">
+        
+        {/* Option 1: Sign Up/In with Email (Navigates to Signup Page) */}
+        <Link href="/signup" passHref>
+          <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
+            <LogIn className="w-4 h-4" />
+            Sign Up/In with Email
+          </DropdownMenuItem>
+        </Link>
+
+        {/* Separator for visual grouping */}
+        <DropdownMenuSeparator />
+
+        {/* Option 2: Connect/Disconnect Wallet */}
+        <DropdownMenuItem 
+          onClick={handleWalletAction}
+          className={`cursor-pointer flex items-center gap-2 ${isConnected ? 'text-red-600' : 'text-primary'}`}
+        >
+          {isConnected ? (
+            <>
+              <LogOut className="w-4 h-4" />
+              Disconnect Wallet
+            </>
+          ) : (
+            <>
+              <Wallet className="w-4 h-4" />
+              Connect Metamask
+            </>
+          )}
+        </DropdownMenuItem>
+        
+        {/* Display connected address if wallet is active */}
+        {isConnected && (
+            <DropdownMenuItem className="text-xs text-muted-foreground break-words pointer-events-none">
+              <span className="font-semibold mr-1">Active:</span> {address}
+            </DropdownMenuItem>
+        )}
+        
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
+
 
 function MobileMenu({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => void }) {
   return null
