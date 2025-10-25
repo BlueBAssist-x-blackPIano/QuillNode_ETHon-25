@@ -7,6 +7,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SiteHeader } from "@/components/site/header"
 import { SiteFooter } from "@/components/site/footer"
+import { Toaster } from "sonner"
 import { UserProvider } from "@/context/user-context"
 import { StoryProvider } from "@/context/story-context"
 import { Suspense } from "react"
@@ -35,6 +36,7 @@ export default function RootLayout({
                   {children}
                   <SiteFooter />
                 </Suspense>
+                <Toaster position="top-right" richColors />
               </StoryProvider>
             </UserProvider>
           </ThemeProvider>
