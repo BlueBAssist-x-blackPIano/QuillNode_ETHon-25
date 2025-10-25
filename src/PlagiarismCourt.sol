@@ -2,7 +2,6 @@
 pragma solidity ^0.8.20;
 
 import {StoryNFT} from "./StoryNFT.sol";
-import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 /**
  * @title PlagiarismCourt
@@ -10,7 +9,7 @@ import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/
  *         Supports multiple reporters, proportional stake payouts,
  *         free voting, and batch finalization of reports.
  */
-contract PlagiarismCourt is ERC721URIStorage, StoryNFT {
+contract PlagiarismCourt {
     /// -----------------------------------------------------------------------
     /// Custom Errors
     /// -----------------------------------------------------------------------
