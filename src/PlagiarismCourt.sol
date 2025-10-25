@@ -56,29 +56,12 @@ contract PlagiarismCourt {
     /// Events
     /// -----------------------------------------------------------------------
     event StoryReported(
-        uint256 indexed storyId,
-        uint256 indexed reportIndex,
-        address indexed reporter,
-        uint256 stake,
-        string proofHash
+        uint256 indexed storyId, uint256 indexed reportIndex, address indexed reporter, uint256 stake, string proofHash
     );
-    event Voted(
-        uint256 indexed storyId,
-        uint256 indexed reportIndex,
-        address indexed voter,
-        bool support
-    );
-    event ReportFinalized(
-        uint256 indexed storyId,
-        uint256 indexed reportIndex,
-        bool plagiarismConfirmed
-    );
+    event Voted(uint256 indexed storyId, uint256 indexed reportIndex, address indexed voter, bool support);
+    event ReportFinalized(uint256 indexed storyId, uint256 indexed reportIndex, bool plagiarismConfirmed);
     event StoryDeleted(uint256 indexed storyId);
-    event ReportResolved(
-        uint256 indexed storyId,
-        uint256 indexed reportIndex,
-        bool plagiarismConfirmed
-    );
+    event ReportResolved(uint256 indexed storyId, uint256 indexed reportIndex, bool plagiarismConfirmed);
 
     /// -----------------------------------------------------------------------
     /// Constructor
@@ -97,20 +80,19 @@ contract PlagiarismCourt {
      * @param storyId ID of the story being reported.
      * @param proofHash IPFS/Avail hash pointing to proof file.
      */
-    function reportStory(
-        uint256 storyId,
-        string calldata proofHash
-    ) external payable returns (uint256) {
+    function reportStory(uint256 storyId, string calldata proofHash) external payable returns (uint256) {
         if (storyNFT.ownerOf(storyId) == address(0)) revert InvalidStory();
-        if (msg.value < MIN_STAKE || msg.value > MAX_STAKE)
+        if (msg.value < MIN_STAKE || msg.value > MAX_STAKE) {
             revert StakeOutOfRange();
+        }
 
         StoryReports storage sReports = storyReports[storyId];
 
         // Ensure reporter has not already reported this story
         for (uint256 i = 0; i < sReports.reportCount; i++) {
-            if (sReports.reports[i].reporter == msg.sender)
+            if (sReports.reports[i].reporter == msg.sender) {
                 revert AlreadyReported();
+            }
         }
 
         uint256 index = sReports.reportCount;
@@ -245,8 +227,7 @@ contract PlagiarismCourt {
             for (uint256 i = 0; i < totalReports; i++) {
                 Report storage r = sReports.reports[i];
                 if (r.yesVotes > r.noVotes) {
-                    uint256 share = (r.stake * reportersTotal) /
-                        totalWinningStake;
+                    uint256 share = (r.stake * reportersTotal) / totalWinningStake;
                     payable(r.reporter).transfer(share);
                 }
             }
@@ -295,10 +276,7 @@ contract PlagiarismCourt {
     /**
      * @notice Get summary of a specific report (for frontend)
      */
-    function getReportSummary(
-        uint256 storyId,
-        uint256 reportIndex
-    )
+    function getReportSummary(uint256 storyId, uint256 reportIndex)
         external
         view
         returns (
@@ -312,24 +290,17 @@ contract PlagiarismCourt {
         )
     {
         Report storage r = storyReports[storyId].reports[reportIndex];
-        return (
-            r.reporter,
-            r.stake,
-            r.proofHash,
-            r.yesVotes,
-            r.noVotes,
-            r.deadline,
-            r.resolved
-        );
+        return (r.reporter, r.stake, r.proofHash, r.yesVotes, r.noVotes, r.deadline, r.resolved);
     }
 
     /**
      * @notice Get current vote counts for a report.
      */
-    function getVoteCount(
-        uint256 storyId,
-        uint256 reportIndex
-    ) external view returns (uint256 yesVotes, uint256 noVotes) {
+    function getVoteCount(uint256 storyId, uint256 reportIndex)
+        external
+        view
+        returns (uint256 yesVotes, uint256 noVotes)
+    {
         Report storage report = storyReports[storyId].reports[reportIndex];
         return (report.yesVotes, report.noVotes);
     }

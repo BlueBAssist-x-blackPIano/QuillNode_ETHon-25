@@ -52,40 +52,21 @@ contract StoryNFT is ERC721, ERC721URIStorage, ERC2981, Ownable {
     // -------------------------
     // Events
     // -------------------------
-    event StoryMinted(
-        uint256 indexed storyId,
-        address indexed author,
-        string metadataURI,
-        bytes32 availHash
-    );
-    event StoryURIUpdated(
-        uint256 indexed storyId,
-        string oldURI,
-        string newURI
-    );
+    event StoryMinted(uint256 indexed storyId, address indexed author, string metadataURI, bytes32 availHash);
+    event StoryURIUpdated(uint256 indexed storyId, string oldURI, string newURI);
     event StoryFlagged(uint256 indexed storyId, address indexed reporter);
     event StoryResolved(uint256 indexed storyId, bool isGuilty);
-    event StoryReadStatusUpdated(
-        uint256 indexed storyId,
-        address indexed reader,
-        ReadStatus status
-    );
-    event StoryXPRecorded(
-        uint256 indexed storyId,
-        address indexed author,
-        uint256 xp
-    );
+    event StoryReadStatusUpdated(uint256 indexed storyId, address indexed reader, ReadStatus status);
+    event StoryXPRecorded(uint256 indexed storyId, address indexed author, uint256 xp);
     event StoryBurned(uint256 indexed storyId, address indexed burner);
 
     // -------------------------
     // Constructor
     // -------------------------
-    constructor(
-        string memory _name,
-        string memory _symbol,
-        address _royaltyReceiver,
-        uint96 _royaltyFeeNumerator
-    ) ERC721(_name, _symbol) Ownable(msg.sender) {
+    constructor(string memory _name, string memory _symbol, address _royaltyReceiver, uint96 _royaltyFeeNumerator)
+        ERC721(_name, _symbol)
+        Ownable(msg.sender)
+    {
         _nextTokenId = 1;
 
         if (_royaltyReceiver != address(0)) {
@@ -121,17 +102,12 @@ contract StoryNFT is ERC721, ERC721URIStorage, ERC2981, Ownable {
     }
 
     /// @notice Sets the address of the Reputation contract
-    function setReputationContract(
-        address _reputationContract
-    ) external onlyOwner {
+    function setReputationContract(address _reputationContract) external onlyOwner {
         reputationContract = _reputationContract;
     }
 
     /// @notice Sets the default royalty information
-    function setDefaultRoyalty(
-        address receiver,
-        uint96 feeNumerator
-    ) external onlyOwner {
+    function setDefaultRoyalty(address receiver, uint96 feeNumerator) external onlyOwner {
         _setDefaultRoyalty(receiver, feeNumerator);
     }
 
@@ -150,10 +126,7 @@ contract StoryNFT is ERC721, ERC721URIStorage, ERC2981, Ownable {
      * @param availHash Commitment hash from Avail DA node confirming data publication
      * @return tokenId ID of the newly minted story NFT
      */
-    function mintStory(
-        string memory metadataURI,
-        bytes32 availHash
-    ) external returns (uint256) {
+    function mintStory(string memory metadataURI, bytes32 availHash) external returns (uint256) {
         require(bytes(metadataURI).length > 0, "Metadata URI cannot be empty");
         uint256 tokenId = _nextTokenId;
         _nextTokenId++;
@@ -179,10 +152,7 @@ contract StoryNFT is ERC721, ERC721URIStorage, ERC2981, Ownable {
      * @param tokenId ID of the story
      * @param newURI New metadata URI to be updated
      */
-    function updateStoryURI(
-        uint256 tokenId,
-        string calldata newURI
-    ) external tokenExists(tokenId) {
+    function updateStoryURI(uint256 tokenId, string calldata newURI) external tokenExists(tokenId) {
         if (ownerOf(tokenId) != msg.sender) revert NotAuthor();
 
         string memory oldURI = _stories[tokenId].metadataURI;
@@ -201,10 +171,7 @@ contract StoryNFT is ERC721, ERC721URIStorage, ERC2981, Ownable {
      * @param tokenId ID of the story being flagged
      * @param reporter Address that reported the plagiarism
      */
-    function flagStory(
-        uint256 tokenId,
-        address reporter
-    ) external onlyPlagiarismCourt tokenExists(tokenId) {
+    function flagStory(uint256 tokenId, address reporter) external onlyPlagiarismCourt tokenExists(tokenId) {
         _stories[tokenId].flagged = true;
         emit StoryFlagged(tokenId, reporter);
     }
@@ -214,10 +181,7 @@ contract StoryNFT is ERC721, ERC721URIStorage, ERC2981, Ownable {
      * @param tokenId ID of the story
      * @param isGuilty True if plagiarism confirmed, false if cleared
      */
-    function resolveStory(
-        uint256 tokenId,
-        bool isGuilty
-    ) external onlyPlagiarismCourt tokenExists(tokenId) {
+    function resolveStory(uint256 tokenId, bool isGuilty) external onlyPlagiarismCourt tokenExists(tokenId) {
         _stories[tokenId].flagged = false;
         emit StoryResolved(tokenId, isGuilty);
     }
@@ -227,8 +191,9 @@ contract StoryNFT is ERC721, ERC721URIStorage, ERC2981, Ownable {
      * @param tokenId ID of the story to burn
      */
     function burnStory(uint256 tokenId) external tokenExists(tokenId) {
-        if (ownerOf(tokenId) != msg.sender && owner() != msg.sender)
+        if (ownerOf(tokenId) != msg.sender && owner() != msg.sender) {
             revert NotAuthor();
+        }
 
         // Clear story data
         delete _stories[tokenId];
@@ -248,10 +213,7 @@ contract StoryNFT is ERC721, ERC721URIStorage, ERC2981, Ownable {
      * @param tokenId ID of the story
      * @param xp Amount of XP awarded
      */
-    function recordXP(
-        uint256 tokenId,
-        uint256 xp
-    ) external onlyReputationContract tokenExists(tokenId) {
+    function recordXP(uint256 tokenId, uint256 xp) external onlyReputationContract tokenExists(tokenId) {
         address author = _stories[tokenId].author;
         emit StoryXPRecorded(tokenId, author, xp);
     }
@@ -265,54 +227,38 @@ contract StoryNFT is ERC721, ERC721URIStorage, ERC2981, Ownable {
      * @param tokenId ID of the story
      * @param status Reading status of the reader
      */
-    function setReadStatus(
-        uint256 tokenId,
-        ReadStatus status
-    ) external tokenExists(tokenId) {
+    function setReadStatus(uint256 tokenId, ReadStatus status) external tokenExists(tokenId) {
         _readStatus[tokenId][msg.sender] = status;
         emit StoryReadStatusUpdated(tokenId, msg.sender, status);
     }
 
     /// @notice Returns the reading status of a reader for a given story
-    function getReadStatus(
-        uint256 tokenId,
-        address reader
-    ) external view tokenExists(tokenId) returns (ReadStatus) {
+    function getReadStatus(uint256 tokenId, address reader) external view tokenExists(tokenId) returns (ReadStatus) {
         return _readStatus[tokenId][reader];
     }
 
     /// @notice Returns the author of a story
-    function getAuthor(
-        uint256 tokenId
-    ) external view tokenExists(tokenId) returns (address) {
+    function getAuthor(uint256 tokenId) external view tokenExists(tokenId) returns (address) {
         return _stories[tokenId].author;
     }
 
     /// @notice Returns the Avail DA hash of a story
-    function getAvailHash(
-        uint256 tokenId
-    ) external view tokenExists(tokenId) returns (bytes32) {
+    function getAvailHash(uint256 tokenId) external view tokenExists(tokenId) returns (bytes32) {
         return _stories[tokenId].availHash;
     }
 
     /// @notice Returns the metadata URI of a story
-    function getMetadataURI(
-        uint256 tokenId
-    ) external view tokenExists(tokenId) returns (string memory) {
+    function getMetadataURI(uint256 tokenId) external view tokenExists(tokenId) returns (string memory) {
         return _stories[tokenId].metadataURI;
     }
 
     /// @notice Returns whether a story is flagged for plagiarism
-    function isFlagged(
-        uint256 tokenId
-    ) external view tokenExists(tokenId) returns (bool) {
+    function isFlagged(uint256 tokenId) external view tokenExists(tokenId) returns (bool) {
         return _stories[tokenId].flagged;
     }
 
     /// @notice Returns the creation timestamp of a story
-    function getCreatedAt(
-        uint256 tokenId
-    ) external view tokenExists(tokenId) returns (uint256) {
+    function getCreatedAt(uint256 tokenId) external view tokenExists(tokenId) returns (uint256) {
         return _stories[tokenId].createdAt;
     }
 
@@ -325,9 +271,7 @@ contract StoryNFT is ERC721, ERC721URIStorage, ERC2981, Ownable {
      * @param tokenId ID of the token to query
      * @return URI string for the token
      */
-    function tokenURI(
-        uint256 tokenId
-    ) public view override(ERC721, ERC721URIStorage) returns (string memory) {
+    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
         return super.tokenURI(tokenId);
     }
 
@@ -336,9 +280,12 @@ contract StoryNFT is ERC721, ERC721URIStorage, ERC2981, Ownable {
      * @param interfaceId Interface ID to check
      * @return bool indicating interface support
      */
-    function supportsInterface(
-        bytes4 interfaceId
-    ) public view override(ERC721, ERC721URIStorage, ERC2981) returns (bool) {
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721, ERC721URIStorage, ERC2981)
+        returns (bool)
+    {
         return super.supportsInterface(interfaceId);
     }
 }

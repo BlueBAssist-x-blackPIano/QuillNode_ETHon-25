@@ -18,12 +18,7 @@ contract DeployPlagiarismCourt is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         // Step 1: Deploy StoryNFT first (since PlagiarismCourt needs its address)
-        StoryNFT storyNFT = new StoryNFT(
-            "QuillNode Stories",
-            "QNS",
-            msg.sender,
-            500
-        );
+        StoryNFT storyNFT = new StoryNFT("QuillNode Stories", "QNS", msg.sender, 500);
 
         // Step 2: Deploy PlagiarismCourt with the StoryNFT address
         PlagiarismCourt court = new PlagiarismCourt(address(storyNFT));

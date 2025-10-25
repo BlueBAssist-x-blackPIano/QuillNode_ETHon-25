@@ -17,10 +17,7 @@ contract StoryNFTTest is Test {
     /// @notice Tests if a story can be minted by the writer
     function testMintStory() public {
         vm.startPrank(writer);
-        uint256 storyId = storyNFT.mintStory(
-            "ipfs://story1",
-            bytes32("0xABC123")
-        );
+        uint256 storyId = storyNFT.mintStory("ipfs://story1", bytes32("0xABC123"));
         vm.stopPrank();
 
         // Verify the owner of the story
@@ -36,10 +33,7 @@ contract StoryNFTTest is Test {
     /// @notice Tests if a reader can set reading status for a story
     function testSetReadingStatus() public {
         vm.startPrank(writer);
-        uint256 storyId = storyNFT.mintStory(
-            "ipfs://story1",
-            bytes32("0xABC123")
-        );
+        uint256 storyId = storyNFT.mintStory("ipfs://story1", bytes32("0xABC123"));
         vm.stopPrank();
 
         vm.startPrank(reader);

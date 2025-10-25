@@ -68,10 +68,7 @@ contract PlagiarismCourtTest is Test {
     function testReportStory() public {
         // Reporter mints a story
         vm.startPrank(reporter);
-        uint256 tokenId = storyNFT.mintStory(
-            "ipfs://metadata",
-            "avail DA Hash"
-        );
+        uint256 tokenId = storyNFT.mintStory("ipfs://metadata", "avail DA Hash");
         vm.stopPrank();
 
         // Defendant reports it
@@ -80,8 +77,7 @@ contract PlagiarismCourtTest is Test {
         vm.stopPrank();
 
         // Verify report recorded
-        (address reportedBy, uint256 stake, , , , , bool resolved) = court
-            .getReportSummary(tokenId, 0);
+        (address reportedBy, uint256 stake,,,,, bool resolved) = court.getReportSummary(tokenId, 0);
         assertEq(reportedBy, defendant, "Reporter mismatch");
         assertEq(stake, STAKE_AMOUNT, "Stake mismatch");
         assertFalse(resolved, "Report should not be resolved yet");
@@ -93,18 +89,12 @@ contract PlagiarismCourtTest is Test {
     function testVotingFlow() public {
         // Reporter mints a story
         vm.startPrank(reporter);
-        uint256 tokenId = storyNFT.mintStory(
-            "ipfs://metadata",
-            "avail DA Hash"
-        );
+        uint256 tokenId = storyNFT.mintStory("ipfs://metadata", "avail DA Hash");
         vm.stopPrank();
 
         // Defendant reports
         vm.startPrank(defendant);
-        uint256 reportIndex = court.reportStory{value: STAKE_AMOUNT}(
-            tokenId,
-            "proof link"
-        );
+        uint256 reportIndex = court.reportStory{value: STAKE_AMOUNT}(tokenId, "proof link");
         vm.stopPrank();
 
         // Voters cast votes
@@ -117,10 +107,7 @@ contract PlagiarismCourtTest is Test {
         vm.stopPrank();
 
         // Check vote counts
-        (uint256 yesVotes, uint256 noVotes) = court.getVoteCount(
-            tokenId,
-            reportIndex
-        );
+        (uint256 yesVotes, uint256 noVotes) = court.getVoteCount(tokenId, reportIndex);
         assertEq(yesVotes, 1, "Yes vote count mismatch");
         assertEq(noVotes, 1, "No vote count mismatch");
     }
@@ -131,18 +118,12 @@ contract PlagiarismCourtTest is Test {
     function testResolveReportAndStakeClaim() public {
         // Reporter mints a story
         vm.startPrank(reporter);
-        uint256 tokenId = storyNFT.mintStory(
-            "ipfs://metadata",
-            "avail DA Hash"
-        );
+        uint256 tokenId = storyNFT.mintStory("ipfs://metadata", "avail DA Hash");
         vm.stopPrank();
 
         // Defendant reports
         vm.startPrank(defendant);
-        uint256 reportIndex = court.reportStory{value: STAKE_AMOUNT}(
-            tokenId,
-            "proof link"
-        );
+        uint256 reportIndex = court.reportStory{value: STAKE_AMOUNT}(tokenId, "proof link");
         vm.stopPrank();
 
         // Two voters vote in favor of plagiarism
