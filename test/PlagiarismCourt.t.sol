@@ -31,7 +31,7 @@ contract PlagiarismCourtTest is Test {
     function setUp() public {
         // Deploy StoryNFT as the owner
         vm.startPrank(owner);
-        storyNFT = new StoryNFT();
+        storyNFT = new StoryNFT("QuillNode Stories", "QNS", owner, 500);
         vm.stopPrank();
 
         // Deploy PlagiarismCourt with reference to StoryNFT
@@ -54,13 +54,7 @@ contract PlagiarismCourtTest is Test {
 
         uint256 initialBalance = storyNFT.balanceOf(reporter);
 
-        storyNFT.mintStory(
-            reporter,
-            STORY_CONTENT,
-            "ipfs hash",
-            "avail DA Hash",
-            "ipfs://metadata"
-        );
+        storyNFT.mintStory("ipfs://metadata", "avail DA Hash");
 
         uint256 newBalance = storyNFT.balanceOf(reporter);
 
@@ -75,11 +69,8 @@ contract PlagiarismCourtTest is Test {
         // Reporter mints a story
         vm.startPrank(reporter);
         uint256 tokenId = storyNFT.mintStory(
-            reporter,
-            STORY_CONTENT,
-            "ipfs hash",
-            "avail DA Hash",
-            "ipfs://metadata"
+            "ipfs://metadata",
+            "avail DA Hash"
         );
         vm.stopPrank();
 
@@ -103,11 +94,8 @@ contract PlagiarismCourtTest is Test {
         // Reporter mints a story
         vm.startPrank(reporter);
         uint256 tokenId = storyNFT.mintStory(
-            reporter,
-            STORY_CONTENT,
-            "ipfs hash",
-            "avail DA Hash",
-            "ipfs://metadata"
+            "ipfs://metadata",
+            "avail DA Hash"
         );
         vm.stopPrank();
 
@@ -144,11 +132,8 @@ contract PlagiarismCourtTest is Test {
         // Reporter mints a story
         vm.startPrank(reporter);
         uint256 tokenId = storyNFT.mintStory(
-            reporter,
-            STORY_CONTENT,
-            "ipfs hash",
-            "avail DA Hash",
-            "ipfs://metadata"
+            "ipfs://metadata",
+            "avail DA Hash"
         );
         vm.stopPrank();
 

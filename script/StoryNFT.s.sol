@@ -20,7 +20,12 @@ contract DeployStoryNFT is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         // Deploy the contract
-        StoryNFT storyNFT = new StoryNFT();
+        StoryNFT storyNFT = new StoryNFT(
+            "QuillNode Stories",
+            "QNS",
+            msg.sender,
+            500
+        );
 
         // Log contract address for confirmation
         console.log("StoryNFT deployed at:", address(storyNFT));

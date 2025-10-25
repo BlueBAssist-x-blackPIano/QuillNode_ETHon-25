@@ -154,6 +154,7 @@ contract StoryNFT is ERC721, ERC721URIStorage, ERC2981, Ownable {
         string memory metadataURI,
         bytes32 availHash
     ) external returns (uint256) {
+        require(bytes(metadataURI).length > 0, "Metadata URI cannot be empty");
         uint256 tokenId = _nextTokenId;
         _nextTokenId++;
 
