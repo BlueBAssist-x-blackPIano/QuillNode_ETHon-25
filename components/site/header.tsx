@@ -18,6 +18,7 @@ import { categories } from "@/data/stories"
 import { SearchInput } from "./search-input"
 import { useUser } from "@/context/user-context"
 import { LogIn, UserPlus, LogOut, Wallet } from 'lucide-react'
+import { ModeToggle } from "@/components/mode-toggle"
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
@@ -56,6 +57,7 @@ export function SiteHeader() {
           <Link href="/premium">
             <Button className="bg-primary text-primary-foreground">Try Premium</Button>
           </Link>
+          <ModeToggle />
           <AuthButtons />
         </div>
         <div className="md:hidden">
@@ -71,6 +73,10 @@ export function SiteHeader() {
               </SheetHeader>
               <nav className="mt-4 grid gap-3">
                 <SearchInput />
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Theme</span>
+                  <ModeToggle />
+                </div>
                 <Link onClick={() => setOpen(false)} href="/premium" className="underline">
                   Try Premium
                 </Link>
@@ -120,15 +126,15 @@ function WriteMenu({ inline = false }: { inline?: boolean }) {
 
 function AuthButtons() {
   // NOTE: Ensure useUser provides all these properties/functions
-  const { isConnected, connectWallet, disconnectWallet, address } = useUser()
+  const { isConnected, connectWallet, address } = useUser()
 
   // Helper to format the wallet address for display in the "Connected" state
   const displayAddress = address ? `${address.substring(0, 6)}...` : 'Wallet';
 
   const handleWalletAction = () => {
-    if (isConnected && disconnectWallet) {
-      // If connected, attempt to disconnect
-      disconnectWallet();
+    if (isConnected) {
+      // If connected, show alert (disconnect not implemented yet)
+      alert("Disconnect wallet: Please disconnect from your wallet extension (e.g., MetaMask)");
     } else {
       // If not connected, attempt to connect
       connectWallet();
