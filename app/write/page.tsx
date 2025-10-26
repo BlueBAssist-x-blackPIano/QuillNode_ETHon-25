@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { categories } from "@/data/stories"
 import { toast } from "sonner"
 import { ExternalLink, Copy, CheckCircle } from "lucide-react"
+import { getSigner, mintStoryNFT } from "@/lib/contract"
 
 export default function WritePage() {
   const [loading, setLoading] = useState(false)
@@ -77,8 +78,35 @@ export default function WritePage() {
       
       console.log("Upload Result:", result)
       
-      // TODO: Next step - Store CID on blockchain
+      
       // For now, the story is permanently on IPFS!
+            console.log("✅ Upload Result:", result)
+      
+      // Now mint Story NFT on blockchain
+      try {
+        toast.info("Minting Story NFT, Approve in MetaMask")
+        
+        const signer = await getSigner()
+        
+        const { tokenId, txHash, blockExplorer } = await mintStoryNFT(
+          signer,
+          result.cid,
+          storyData.title,
+          storyData.category,
+          storyData.premium
+        )
+        
+        toast.success(`Yout story NFT minted! Token ID: ${tokenId}`)
+        console.log("Transaction:", blockExplorer)
+        console.log("Token ID:", tokenId)
+        console.log("IPFS CID:", result.cid)
+        
+      } catch (blockchainError: any) {
+        console.error("Blockchain error:", blockchainError)
+        toast.error("Story is on IPFS, but NFT minting failed: " + blockchainError.message)
+      }
+
+
 
     } catch (error: any) {
       console.error("Upload error:", error)

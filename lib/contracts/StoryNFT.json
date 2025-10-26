@@ -1,0 +1,11 @@
+{
+  "abi": [
+    "function mintStory(string memory ipfsCID, string memory title, string memory category, bool isPremium) external returns (uint256)",
+    "function getStoryMetadata(uint256 tokenId) external view returns (tuple(string ipfsCID, string title, string category, bool isPremium, uint256 timestamp))",
+    "function ownerOf(uint256 tokenId) external view returns (address)",
+    "function tokenURI(uint256 tokenId) external view returns (string)",
+    "function totalSupply() external view returns (uint256)",
+    "function getAllStories(uint256 offset, uint256 limit) external view returns (tuple(uint256 tokenId, string ipfsCID, string title, string category, address author, bool isPremium, uint256 timestamp)[])",
+    "event StoryMinted(uint256 indexed tokenId, address indexed author, string ipfsCID, string title)"
+  ]
+}
