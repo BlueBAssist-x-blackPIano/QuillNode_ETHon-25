@@ -27,13 +27,13 @@ export default function WritePage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
-    // TODO: on-chain storage (Avail Nexus/DA)
+    
     alert("Story submission placeholder. //upload to IPFS(done) + write metadata on-chain(TODO)")
     
     setIpfsCid(null)
 
     try {
-      // Get form data
+      
       const formData = new FormData(e.currentTarget)
       
       const storyData = {

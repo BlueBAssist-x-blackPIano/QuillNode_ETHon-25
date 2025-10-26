@@ -56,7 +56,7 @@ export default function StoryDetailPage({ params }: { params: { id: string } }) 
       {isNFT && (
         <div className="mb-4 flex items-center gap-2">
           <Badge variant="outline" className="gap-1">
-            🎨 Story NFT #{tokenId}
+            Story NFT #{tokenId}
           </Badge>
           <a 
             href={`https://sepolia.etherscan.io/token/0x82018421063d7c0eFE8a362638bF0D35bA7C0C0d?a=${tokenId}`}
@@ -102,7 +102,7 @@ export default function StoryDetailPage({ params }: { params: { id: string } }) 
           {isNFT && ipfsData && (
             <div className="p-6 bg-muted rounded-lg border-2">
               <h2 className="font-semibold mb-3 flex items-center gap-2">
-                📖 Full Story Content
+                Full Story Content
                 {ipfsLoading && <Loader2 className="w-4 h-4 animate-spin" />}
               </h2>
               <div className="prose dark:prose-invert max-w-none whitespace-pre-wrap">
