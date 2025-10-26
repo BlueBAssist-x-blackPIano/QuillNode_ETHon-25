@@ -80,7 +80,7 @@ export default function WritePage() {
       
       
       // For now, the story is permanently on IPFS!
-            console.log("✅ Upload Result:", result)
+            console.log("Upload Result:", result)
       
       // Now mint Story NFT on blockchain
       try {
@@ -96,7 +96,21 @@ export default function WritePage() {
           storyData.premium
         )
         
-        toast.success(`Yout story NFT minted! Token ID: ${tokenId}`)
+        toast.success(
+          <div>
+            <p className="font-bold mb-2">Story NFT Minted Successfully!</p>
+            <p className="text-xs mb-1">Token ID: #{tokenId}</p>
+            <a 
+              href={blockExplorer}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs underline flex items-center gap-1 hover:text-primary"
+            >
+              View on Etherscan →
+            </a>
+          </div>,
+          { duration: 10000 }
+        )
         console.log("Transaction:", blockExplorer)
         console.log("Token ID:", tokenId)
         console.log("IPFS CID:", result.cid)
