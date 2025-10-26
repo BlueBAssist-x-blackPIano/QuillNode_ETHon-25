@@ -49,11 +49,9 @@ contract ReputationSystem is Ownable {
     // MODIFIERS
     // -------------------------------------------------------
     modifier onlyAuthorized() {
-        if (
-            msg.sender != owner() &&
-            msg.sender != storyNFTAddress &&
-            msg.sender != plagiarismCourt
-        ) revert UnauthorizedAccess();
+        if (msg.sender != owner() && msg.sender != storyNFTAddress && msg.sender != plagiarismCourt) {
+            revert UnauthorizedAccess();
+        }
         _;
     }
 
@@ -87,9 +85,7 @@ contract ReputationSystem is Ownable {
         _reputation[user].xp += amount;
 
         // Level up if XP exceeds threshold
-        while (
-            _reputation[user].xp >= XP_PER_LEVEL * (_reputation[user].level + 1)
-        ) {
+        while (_reputation[user].xp >= XP_PER_LEVEL * (_reputation[user].level + 1)) {
             _reputation[user].level++;
             emit LevelUp(user, _reputation[user].level);
         }
@@ -115,9 +111,7 @@ contract ReputationSystem is Ownable {
     // -------------------------------------------------------
 
     /// @notice Returns user's XP and Level
-    function getReputation(
-        address user
-    ) external view returns (uint256 xp, uint256 level) {
+    function getReputation(address user) external view returns (uint256 xp, uint256 level) {
         Reputation memory rep = _reputation[user];
         return (rep.xp, rep.level);
     }

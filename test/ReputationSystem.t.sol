@@ -53,12 +53,8 @@ contract ReputationSystemTest is Test {
         reputationSystem.reduceXP(writer, decrease);
         vm.stopPrank();
 
-        (uint256 rep, ) = reputationSystem.getReputation(writer);
-        assertEq(
-            rep,
-            initial - decrease,
-            "Reputation should decrease correctly"
-        );
+        (uint256 rep,) = reputationSystem.getReputation(writer);
+        assertEq(rep, initial - decrease, "Reputation should decrease correctly");
     }
 
     // Test cannot decrease below zero
