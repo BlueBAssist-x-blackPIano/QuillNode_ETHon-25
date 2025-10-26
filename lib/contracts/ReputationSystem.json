@@ -1,0 +1,57 @@
+{
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "addXP",
+      "inputs": [
+        { "name": "user", "type": "address" },
+        { "name": "amount", "type": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "getReputation",
+      "inputs": [
+        { "name": "user", "type": "address" }
+      ],
+      "outputs": [
+        { "name": "xp", "type": "uint256" },
+        { "name": "level", "type": "uint256" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "reduceXP",
+      "inputs": [
+        { "name": "user", "type": "address" },
+        { "name": "amount", "type": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "XPAdded",
+      "inputs": [
+        { "name": "user", "type": "address", "indexed": true },
+        { "name": "amount", "type": "uint256", "indexed": false }
+      ]
+    },
+    {
+      "type": "event",
+      "name": "LevelUp",
+      "inputs": [
+        { "name": "user", "type": "address", "indexed": true },
+        { "name": "newLevel", "type": "uint256", "indexed": false }
+      ]
+    }
+  ]
+}

@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { categories } from "@/data/stories"
 import { toast } from "sonner"
 import { ExternalLink, Copy, CheckCircle } from "lucide-react"
+import { getSigner, mintStoryNFT } from "@/lib/contract"
 
 export default function WritePage() {
   const [loading, setLoading] = useState(false)
@@ -26,13 +27,13 @@ export default function WritePage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
-    // TODO: on-chain storage (Avail Nexus/DA)
+    
     alert("Story submission placeholder. //upload to IPFS(done) + write metadata on-chain(TODO)")
     
     setIpfsCid(null)
 
     try {
-      // Get form data
+      
       const formData = new FormData(e.currentTarget)
       
       const storyData = {
@@ -77,8 +78,49 @@ export default function WritePage() {
       
       console.log("Upload Result:", result)
       
-      // TODO: Next step - Store CID on blockchain
+      
       // For now, the story is permanently on IPFS!
+            console.log("Upload Result:", result)
+      
+      // Now mint Story NFT on blockchain
+      try {
+        toast.info("Minting Story NFT, Approve in MetaMask")
+        
+        const signer = await getSigner()
+        
+        const { tokenId, txHash, blockExplorer } = await mintStoryNFT(
+          signer,
+          result.cid,
+          storyData.title,
+          storyData.category,
+          storyData.premium
+        )
+        
+        toast.success(
+          <div>
+            <p className="font-bold mb-2">Story NFT Minted Successfully!</p>
+            <p className="text-xs mb-1">Token ID: #{tokenId}</p>
+            <a 
+              href={blockExplorer}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs underline flex items-center gap-1 hover:text-primary"
+            >
+              View on Etherscan →
+            </a>
+          </div>,
+          { duration: 10000 }
+        )
+        console.log("Transaction:", blockExplorer)
+        console.log("Token ID:", tokenId)
+        console.log("IPFS CID:", result.cid)
+        
+      } catch (blockchainError: any) {
+        console.error("Blockchain error:", blockchainError)
+        toast.error("Story is on IPFS, but NFT minting failed: " + blockchainError.message)
+      }
+
+
 
     } catch (error: any) {
       console.error("Upload error:", error)

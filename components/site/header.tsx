@@ -134,7 +134,7 @@ function AuthButtons() {
   const handleWalletAction = () => {
     if (isConnected) {
       // If connected, show alert (disconnect not implemented yet)
-      alert("Disconnect wallet: Please disconnect from your wallet extension (e.g., MetaMask)");
+      alert("Disconnect wallet: Please disconnect from your wallet extension (e.g., MetaMask or simply lock your metamask account)");
     } else {
       // If not connected, attempt to connect
       connectWallet();
