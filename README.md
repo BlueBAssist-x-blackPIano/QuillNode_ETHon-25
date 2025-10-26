@@ -278,7 +278,7 @@ function finalizeReport(uint256 tokenId, uint256 reportIndex)
 
 ---
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 **Frontend:** Next.js 15.2.4 • React 18.3.1 • TypeScript 5 • Tailwind CSS 4 • shadcn/ui  
 **Backend:** Next.js API Routes • Pinata SDK  
@@ -289,7 +289,7 @@ function finalizeReport(uint256 tokenId, uint256 reportIndex)
 
 ---
 
-## 🚀 Setup & Installation
+##  Setup & Installation
 
 ### Prerequisites
 - Node.js 18+, npm, Git
@@ -329,7 +329,7 @@ npm run dev
 
 ---
 
-## 🎯 Why QuillNode Matters
+##  Why QuillNode Matters
 
 **For Authors:**  
  True ownership •  No platform fees •  Verifiable reputation •  Censorship-resistant
@@ -352,10 +352,7 @@ Special thanks to **Avail**, **Pinata**, **Privy**, **Ethereum Foundation**, **O
 
 Built with ❤️ by Team eTheRealSteel:
 
-- **P S S Darshan**
-- **Parth Singh**   
-- **Ayush Verma**
+- **P S S Darshan**  - **Parth Singh**   - **Ayush Verma**
 
 
 </div>
-````
