@@ -1,0 +1,63 @@
+{
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [
+        { "name": "_storyNFT", "type": "address" },
+        { "name": "_developer", "type": "address" }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "reportPlagiarism",
+      "inputs": [
+        { "name": "tokenId", "type": "uint256" },
+        { "name": "proofHash", "type": "string" }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "vote",
+      "inputs": [
+        { "name": "tokenId", "type": "uint256" },
+        { "name": "reportIndex", "type": "uint256" },
+        { "name": "voteYes", "type": "bool" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "getReportCount",
+      "inputs": [
+        { "name": "tokenId", "type": "uint256" }
+      ],
+      "outputs": [
+        { "name": "", "type": "uint256" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "finalizeReport",
+      "inputs": [
+        { "name": "tokenId", "type": "uint256" },
+        { "name": "reportIndex", "type": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "PlagiarismReported",
+      "inputs": [
+        { "name": "tokenId", "type": "uint256", "indexed": true },
+        { "name": "reporter", "type": "address", "indexed": true },
+        { "name": "reportIndex", "type": "uint256", "indexed": false }
+      ]
+    }
+  ]
+}

@@ -9,11 +9,14 @@ import { getStoryByTokenId } from "@/lib/contract"
 import { useIPFSFetch } from "@/hooks/use-ipfs-fetch"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, ExternalLink } from "lucide-react"
+import { Loader2, ExternalLink, Award, AlertTriangle } from "lucide-react"
+import { getUserReputation, getPlagiarismReportCount } from "@/lib/contract"
 
 export default function StoryDetailPage({ params }: { params: { id: string } }) {
   const [story, setStory] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [reputation, setReputation] = useState<{ xp: number; level: number } | null>(null)
+  const [reportCount, setReportCount] = useState<number>(0)
   
   const isNFT = params.id.startsWith("nft-")
   const tokenId = isNFT ? parseInt(params.id.replace("nft-", "")) : null
@@ -28,6 +31,24 @@ export default function StoryDetailPage({ params }: { params: { id: string } }) 
         try {
           const nftStory = await getStoryByTokenId(tokenId)
           setStory(nftStory)
+          
+          // Fetch reputation for the author
+          if (nftStory.author) {
+            try {
+              const rep = await getUserReputation(nftStory.author)
+              setReputation(rep)
+            } catch (error) {
+              console.error("Error loading reputation:", error)
+            }
+          }
+          
+          // Fetch plagiarism report count
+          try {
+            const count = await getPlagiarismReportCount(tokenId)
+            setReportCount(count)
+          } catch (error) {
+            console.error("Error loading plagiarism reports:", error)
+          }
         } catch (error) {
           console.error("Error loading NFT story:", error)
         }
@@ -85,9 +106,28 @@ export default function StoryDetailPage({ params }: { params: { id: string } }) 
         
         <div className="md:col-span-2 space-y-4">
           <h1 className="text-3xl font-semibold">{story.title}</h1>
-          <p className="text-sm text-muted-foreground">
-            by {story.author || "Anonymous"}
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-sm text-muted-foreground">
+              by {story.author || "Anonymous"}
+            </p>
+            {reputation && (
+              <div className="flex items-center gap-2 text-sm">
+                <Badge variant="outline" className="flex items-center gap-1">
+                  <Award className="w-3 h-3" />
+                  Level {reputation.level}
+                </Badge>
+                <span className="text-xs text-muted-foreground">{reputation.xp} XP</span>
+              </div>
+            )}
+          </div>
+          {reportCount > 0 && (
+            <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-3 flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-red-600" />
+              <p className="text-sm text-red-800 dark:text-red-200">
+                This story has <strong>{reportCount}</strong> plagiarism report{reportCount > 1 ? 's' : ''}
+              </p>
+            </div>
+          )}
           
           <div className="flex flex-wrap gap-2">
             <Badge variant="secondary">{story.category}</Badge>

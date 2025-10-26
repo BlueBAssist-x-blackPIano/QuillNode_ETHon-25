@@ -1,6 +1,8 @@
 import { ethers } from "ethers"
 import { CONTRACTS, CHAIN_CONFIG } from "./contracts/addresses"
 import StoryNFTABI from "./contracts/StoryNFT.json"
+import ReputationSystemABI from "./contracts/ReputationSystem.json"
+import PlagiarismCourtABI from "./contracts/PlagiarismCount.json"
 
 // Get StoryNFT contract instance
 export function getStoryNFTContract(signerOrProvider: ethers.Signer | ethers.Provider) {
@@ -121,5 +123,41 @@ export async function getStoryByTokenId(tokenId: number) {
     isPremium: metadata.isPremium,
     timestamp: new Date(Number(metadata.timestamp) * 1000).toISOString(),
     author: owner
+  }
+}
+export async function getUserReputation(userAddress: string): Promise<{ xp: number; level: number }> {
+  try {
+    const provider = getProvider()
+    const contract = new ethers.Contract(
+      CONTRACTS.REPUTATION_SYSTEM,
+      ReputationSystemABI.abi,
+      provider
+    )
+    
+    const [xp, level] = await contract.getReputation(userAddress)
+    
+    return {
+      xp: Number(xp),
+      level: Number(level)
+    }
+  } catch (error) {
+    console.error("Error fetching reputation:", error)
+    throw error
+  }
+}
+export async function getPlagiarismReportCount(tokenId: number): Promise<number> {
+  try {
+    const provider = getProvider()
+    const contract = new ethers.Contract(
+      CONTRACTS.PLAGIARISM_COURT,
+      PlagiarismCourtABI.abi,
+      provider
+    )
+    
+    const count = await contract.getReportCount(tokenId)
+    return Number(count)
+  } catch (error) {
+    console.error("Error fetching plagiarism reports:", error)
+    return 0
   }
 }
