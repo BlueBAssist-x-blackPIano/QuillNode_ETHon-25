@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { useUser } from "@/context/user-context"
 import { usePrivy } from '@privy-io/react-auth';
 import { CheckCircle, Wallet, Mail } from 'lucide-react'; // Added icons for better clarity
+import ClientAvailSection from "@/components/availNexus/ClientAvailSection";
 
 // Utility function to shorten an address for display
 const shortenAddress = (address: string) => {
@@ -103,6 +104,10 @@ export default function SignupPage() {
               Continue with Privy
             </Button>
           )}
+
+          <div className="w-full mt-8">
+          <ClientAvailSection />
+        </div>
         </div>
       </div>
     );
